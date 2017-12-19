@@ -10,7 +10,7 @@ char	*ft_strncat(char *s1, const char *s2, size_t n)
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	i = 0;
-	while (i < len2 & i < n)
+	while ((i < len2) & (i < n))
 	{
 		s1[len1 + i] = s2[i];
 		i++;
