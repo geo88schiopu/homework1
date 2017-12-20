@@ -1,41 +1,64 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_strsplit.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: cfatrane <cfatrane@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/22 10:43:43 by cfatrane          #+#    #+#             */
-/*   Updated: 2017/01/26 19:56:56 by cfatrane         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "libft.h"
 
-char	**ft_strsplit(char const *s, char c)
+static int		ft_find_wordlike(const char *str, int i, char **ret, char c)
 {
-	char	**str;
+	int		len;
+	int		space;
+
+	space = 0;
+	len = 0;
+	while (*str == c)
+	{
+		str++;
+		space++;
+	}
+	while (str[len] && str[len] != c)
+		len++;
+	if (len > 0)
+	{
+		ret[i] = ft_strnew(len);
+		ft_strncpy(ret[i], str, len);
+	}
+	return (space + len);
+}
+
+static int		ft_count_words(const char *str, int i, char c)
+{
+	while (*str == c)
+		str++;
+	while (*str)
+	{
+		while (*str && *str != c)
+			str++;
+		while (*str == c)
+			str++;
+		i++;
+	}
+	return (i);
+}
+
+char			**ft_strsplit(char const *s, char c)
+{
+	int		len;
+	char	**ret;
 	int		i;
-	int		nb_words;
-	size_t	len;
+	int		wc;
 
 	if (!s)
 		return (NULL);
-	i = 0;
-	nb_words = ft_count_words_sep(s, c);
-	if (!(str = ((char**)malloc(sizeof(*str) * (nb_words + 1)))))
+	wc = ft_count_words(s, 0, c);
+	len = 0;
+	ret = (char **)ft_memalloc((wc + 1) * sizeof(char *));
+	if (!ret)
 		return (NULL);
-	while (nb_words--)
+	i = 0;
+	len = 0;
+	while (*s)
 	{
-		while (*s != '\0' && *s == c)
-			s++;
-		len = ft_strlen_sep(s, c);
-		str[i] = ft_strsub(s, 0, len);
-		if (str[i] == '\0')
-			return (NULL);
-		s = s + ft_strlen_sep(s, c);
-		i++;
+		len = ft_find_wordlike(s, i++, ret, c);
+		s += len;
 	}
-	str[i] = NULL;
-	return (str);
+	ret[wc] = 0;
+	return (ret);
 }
