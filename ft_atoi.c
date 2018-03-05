@@ -1,5 +1,5 @@
 #include "libft.h"
-
+//just one comment
 int	get_return(unsigned long long ret, int neg, const char *newp)
 {
 	int count;
